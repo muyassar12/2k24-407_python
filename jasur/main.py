@@ -45,6 +45,7 @@ class Avtosalon:
             self.select_color(car_type, selected_model, price)
         else:
             print("Invalid choice. Please enter a valid model number.")
+            self.select_car_type(car_type)
 
     def select_color(self, car_type, model, price):
         print("\nAvailable colors:")
@@ -59,6 +60,7 @@ class Avtosalon:
             self.confirm_selection(car_type, model, selected_color, final_price)
         else:
             print("Invalid color choice. Please enter a valid color number.")
+            self.select_color(car_type, model, price)
 
     def confirm_selection(self, car_type, model, color, price):
         print("\nSelected Car Details:")
@@ -74,6 +76,7 @@ class Avtosalon:
             print("Purchase cancelled.")
         else:
             print("Invalid input. Please enter '1' or '2'.")
+            self.confirm_selection(car_type, model, color, price)
 
     def complete_purchase(self, price):
         print(f"\nThank you for your purchase! The total price is ${price}.")
