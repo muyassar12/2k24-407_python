@@ -85,7 +85,7 @@ class Purchase:
                 option_color = int(input('Tanlang: '))
                 user_color, extra_price = self.colors[option_color]
                 print(f'{user_color}\'ni tanladingiz!')
-                return option_color, extra_price
+                return user_color, extra_price
             except:                
                 print('Iltimos, yaroqli raqam kiriting')
                 continue
