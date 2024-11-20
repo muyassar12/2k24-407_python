@@ -166,9 +166,12 @@ buy = input("Mashina sotib olishni xohlaysizmi? (yes/no): ")
 if buy.lower() == "yes":
     print(f"Iltimos, to'lov qiling. Sizdan {int(my_car['Price'])}  talab qilinadi.")
     while True:
-        tolov = input("To'lov qilish uchun 1 ni bosing: ")
+        tolov = input("To'lov qilish uchun 1 ni bosing: \n to'xtatish uchun exit dep yozing  ")
         if tolov == "1":
             print("Xaridingiz uchun rahmat!")
+            break
+        if tolov =="exit":
+            print("sizni ko'rganimdan xursandman ")
             break
         else:
             print("Noto'g'ri kiritingiz, qayta urinib ko'ring.")
