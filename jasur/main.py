@@ -1,3 +1,21 @@
+class CompletePurchase:
+    def __init__(self, price):
+        self.price = price
+
+    def process_purchase(self):
+        print(f"\nThank you for your purchase! The total price is ${self.price}.")
+        print("Purchase completed successfully.\n")
+
+        continue_option = input("Would you like to buy another car or exit? (1.buy again/2.exit)\n>>> ")
+        if continue_option == "1":
+            return "restart"
+        elif continue_option == "2":
+            return "exit"
+        else:
+            print("Invalid input. Please enter '1' to buy again or '2' to exit.")
+            return self.process_purchase()
+
+
 class Avtosalon:
     def __init__(self):
         self.cars = {
@@ -25,7 +43,7 @@ class Avtosalon:
             option = input("Choose option (1-6):\n>>> ")
             if option == "6":
                 self.exit()
-                exit()
+                break
             elif option in ["1", "2", "3", "4", "5"]:
                 car_type = list(self.cars.keys())[int(option) - 1]
                 self.select_car_type(car_type)
@@ -71,29 +89,27 @@ class Avtosalon:
 
         confirmation = input("Confirm purchase? (1.yes/2.no)\n>>> ")
         if confirmation == "1":
-            self.complete_purchase(price)
+            purchase = CompletePurchase(price)
+            action = purchase.process_purchase()
+            if action == "restart":
+                self.start()
+            elif action == "exit":
+                self.exit()
         elif confirmation == "2":
             print("Purchase cancelled.")
         else:
             print("Invalid input. Please enter '1' or '2'.")
             self.confirm_selection(car_type, model, color, price)
 
-    def complete_purchase(self, price):
-        print(f"\nThank you for your purchase! The total price is ${price}.")
-        print("Purchase completed successfully.\n")
-
-        continue_option = input("Would you like to buy another car or exit? (1.buy again/2.exit)\n>>> ")
-        if continue_option == "1":
-            self.start()
-        elif continue_option == "2":
-            self.exit()
-            exit()
-        else:
-            print("Invalid input. Please enter '1' to buy again or '2' to exit.")
-
     def exit(self):
         print("Thank you for visiting our Avtosalon. Goodbye!")
+        exit()
 
-if __name__ == "__main__":
+
+def main():
     avtosalon = Avtosalon()
     avtosalon.start()
+
+
+if __name__ == "__main__":
+    main()
