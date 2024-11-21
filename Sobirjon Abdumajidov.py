@@ -117,6 +117,11 @@ class Purchase:
         final_price = base_price * (1 + extra_price)
         self.confirm_purchase(selected_car, selected_model, selected_color, base_price, final_price)
 
-if __name__ == "__main__":
+
+def main():
     purchase = Purchase()
     purchase.run()
+
+
+if __name__ == "__main__":
+    main()
