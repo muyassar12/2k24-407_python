@@ -3,8 +3,7 @@ class Car:
         self.name = name
         self.price = price
 
-    @staticmethod
-    def select_type(my_car):
+    def select_type(self, my_car):
         while True:
             turi = input("Iltimos, mashina turini tanlang:\n1 = Sedan\n2 = Hatchback\n3 = Miniwen\n4 = Suv\n")
             if turi == '1':
@@ -26,8 +25,7 @@ class Car:
             else:
                 print("Noto'g'ri tanlov. Qayta urinib ko'ring.")
 
-    @staticmethod
-    def select_model(my_car):
+    def select_model(self, my_car):
         model_dict = {
             "Sedan": [("BMW M5", 25000), ("Audi RS", 9000), ("Malibu", 12000)],
             "Hatchback": [("Opel Rocks", 7000), ("Toyota Corolla", 9000), ("Ford Focus", 12000)],
@@ -46,8 +44,7 @@ class Car:
             else:
                 print("Noto'g'ri tanlov. Qayta urinib ko'ring.")
 
-    @staticmethod
-    def select_color(my_car):
+    def select_color(self, my_car):
         print("1. Black (0%)\n2. White (+20%)\n3. Gray (+10%)")
         while True:
             color = input("Iltimos, kerakli rangni tanlang: ")
@@ -70,9 +67,10 @@ class Car:
 def main():
     my_car = {"Type": "", "Model": "", "Color": "", "Price": 0}
     print("Asalomu aleykum hurmatli mijoz!")
-    Car.select_type(my_car)
-    Car.select_model(my_car)
-    Car.select_color(my_car)
+    car = Car("", 0)
+    car.select_type(my_car)
+    car.select_model(my_car)
+    car.select_color(my_car)
 
     buy = input("Mashina sotib olishni xohlaysizmi? (yes/no): ").lower()
     if buy == "yes":
