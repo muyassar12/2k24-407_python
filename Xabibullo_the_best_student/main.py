@@ -46,3 +46,4 @@ def return_price(color_index, type_index, car_types, car_colors, color_prices):
 
 car_description, price = return_price(selected_color, selected_type, car_types, car_colors, color_prices)
 print(f"Tanlangan avtomobil: {car_description}\nNarxi: ${price}")
+
