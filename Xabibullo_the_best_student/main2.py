@@ -55,7 +55,6 @@ class CarType:
                 print("Please enter a number.")
         return self.selected_car
 
-
 class CarModel:
     def __init__(self, selected_car):
         self.models = selected_car["models"]
