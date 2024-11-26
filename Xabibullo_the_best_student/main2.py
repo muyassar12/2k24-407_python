@@ -121,16 +121,17 @@ class Summary:
         print(f"Color: {selected_color[0]} (Adds {selected_color[1] * 100}% to price)")
         print(f"Final Price: ${final_price:,.2f}")
 
+def main():
+    car_type_selector = CarType()
+    selected_car = car_type_selector.choose_car_type()
 
+    car_model_selector = CarModel(selected_car)
+    selected_model = car_model_selector.choose_model()
 
-car_type_selector = CarType()
-selected_car = car_type_selector.choose_car_type()
+    car_color_selector = CarColor()
+    selected_color = car_color_selector.choose_color()
 
-car_model_selector = CarModel(selected_car)
-selected_model = car_model_selector.choose_model()
-
-car_color_selector = CarColor()
-selected_color = car_color_selector.choose_color()
-
-final_price = PriceCalculator.calculate_price(selected_model, selected_color)
-Summary.display(selected_car, selected_model, selected_color, final_price)
+    final_price = PriceCalculator.calculate_price(selected_model, selected_color)
+    Summary.display(selected_car, selected_model, selected_color, final_price)
+    
+main()
