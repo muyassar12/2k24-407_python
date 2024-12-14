@@ -3,7 +3,8 @@ class Car:
         self.name = name
         self.price = price
 
-    def select_type(self, my_car):
+    @staticmethod
+    def select_type(my_car):
         while True:
             turi = input("Iltimos, mashina turini tanlang:\n1 = Sedan\n2 = Hatchback\n3 = Miniwen\n4 = Suv\n")
             if turi == '1':
