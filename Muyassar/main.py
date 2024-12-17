@@ -1,61 +1,37 @@
-class CarData:
-    def __init__(self, car_types, car_models, colors):
-        self.car_types = car_types
-        self.car_models = car_models
-        self.colors = colors
+class Car:
+    def __init__(self, car_type, model, color, price):
+        self.car_type = car_type
+        self.model = model
+        self.color = color
+        self.price = price
 
-    def get_car_models(self, selected_type):
-        return self.car_models.get(selected_type, [])
-
-class CarSelection:
-    def __init__(self, car_data):
-        self.car_data = car_data
-        self.selected_type = None
-        self.selected_model = None
-        self.selected_price = None
-        self.selected_color = None
-
-    def choose_car_type(self):
-        print("Mavjud mashina turlari:")
-        for i, car in enumerate(self.car_data.car_types, 1):
-            print(f"{i}. {car}")
-        choice = int(input("Mashina turini tanlash uchun raqamni kiriting: "))
-        self.selected_type = self.car_data.car_types[choice - 1]
-        print(f"Siz tanladingiz: {self.selected_type}")
-
-    def choose_car_model(self):
-        models = self.car_data.get_car_models(self.selected_type)
-        print("\nMavjud modellar:")
-        for i, (model, price) in enumerate(models, 1):
-            print(f"{i}. {model} - ${price}")
-        choice = int(input("Modelni tanlash uchun raqamni kiriting: "))
-        self.selected_model, self.selected_price = models[choice - 1]
-        print(f"Siz tanladingiz: {self.selected_model} - ${self.selected_price}")
-
-    def choose_color(self):
-        print("\nMavjud ranglar:")
-        for i, color in enumerate(self.car_data.colors, 1):
-            print(f"{i}. {color}")
-        choice = int(input("Rangni tanlash uchun raqamni kiriting: "))
-        self.selected_color = self.car_data.colors[choice - 1]
-        print(f"Siz tanladingiz: {self.selected_color}")
-
-    def confirm_purchase(self):
-        print("\nSizning tanlovingiz:")
-        print(f"Mashina turi: {self.selected_type}")
-        print(f"Model: {self.selected_model}")
-        print(f"Rang: {self.selected_color}")
-        print(f"Narxi: ${self.selected_price}")
-        confirm = input("Xaridni tasdiqlaysizmi? (ha/yo'q): ")
-        if confirm.lower() == "ha":
-            print("Xarid muvaffaqiyatli yakunlandi!")
-            print(f"Umumiy narx: ${self.selected_price}")
-        else:
-            print("Xarid bekor qilindi.")
+    def display_details(self):
+        print("\nSiz tanlagan mashina:")
+        print(f"Mashina turi: {self.car_type}")
+        print(f"Model: {self.model}")
+        print(f"Rang: {self.color}")
+        print(f"Narxi: ${self.price}")
 
 
+def choose_option(prompt, options):
+    while True:
+        try:
+            print(prompt)
+            for i, option in enumerate(options, 1):
+                if isinstance(option, tuple):
+                    print(f"{i}. {option[0]} - ${option[1]}")
+                else:
+                    print(f"{i}. {option}")
+            choice = int(input("Tanlovingizni kiriting: "))
+            if 1 <= choice <= len(options):
+                return options[choice - 1]
+            else:
+                print(f"Xato: 1 dan {len(options)} gacha bo'lgan raqamni tanlang.")
+        except ValueError:
+            print("Faqat raqam kiriting.")
 
-if __name__ == "__main__":
+
+def main():
     car_types = ["Sedan", "Hatchback", "Coupe", "Minivan", "SUV"]
     car_models = {
         "Sedan": [("Model S", 30000), ("Model E", 25000)],
@@ -66,9 +42,27 @@ if __name__ == "__main__":
     }
     colors = ["Qora", "Oq", "Kulrang"]
 
-    car_data = CarData(car_types, car_models, colors)
-    car_selector = CarSelection(car_data)
-    car_selector.choose_car_type()
-    car_selector.choose_car_model()
-    car_selector.choose_color()
-    car_selector.confirm_purchase()
+    selected_type = choose_option("Mavjud mashina turlari:", car_types)
+
+    models = car_models[selected_type]
+    selected_model, selected_price = choose_option("\nMavjud modellar:", models)
+
+    selected_color = choose_option("\nMavjud ranglar:", colors)
+
+    chosen_car = Car(selected_type, selected_model, selected_color, selected_price)
+
+    chosen_car.display_details()
+    while True:
+        confirm = input("Xaridni tasdiqlaysizmi? (ha/yo'q): ").strip().lower()
+        if confirm == "ha":
+            print("Xarid muvaffaqiyatli yakunlandi! Rahmat!")
+            break
+        elif confirm == "yo'q":
+            print("Xarid bekor qilindi.")
+            break
+        else:
+            print("Noto'g'ri tanlov, iltimos 'ha' yoki 'yo'q' deb javob bering.")
+
+
+if __name__ == "__main__":
+    main()
