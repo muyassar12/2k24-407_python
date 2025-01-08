@@ -1,110 +1,78 @@
 class CarSelectionSystem:
-    def __init__(self):
-        self.cars = {
-            "sedan": {
-                "Toyota Camry": 25000,
-                "Honda Accord": 24000,
-                "Hyundai Sonata": 23000
-            },
-            "hatchback": {
-                "Volkswagen Golf": 22000,
-                "Ford Fiesta": 18000,
-                "Kia Rio": 17000
-            },
-            "coupe": {
-                "Chevrolet Camaro": 35000,
-                "Ford Mustang": 37000,
-                "Dodge Challenger": 38000
-            },
-            "minivan": {
-                "Toyota Sienna": 30000,
-                "Honda Odyssey": 31000,
-                "Kia Carnival": 32000
-            },
-            "suv": {
-                "Toyota RAV4": 27000,
-                "Honda CR-V": 26000,
-                "Ford Explorer": 35000
-            }
-        }
-        self.available_colors = ["qora", "oq", "seriy"]
+    def __init__(self, cars, colors, price_increase):
+        self.cars = cars
+        self.colors = colors
+        self.price_increase = price_increase
 
-    def choose_car_type(self):
-        print("Moshingiz turini tanlang:")
-        car_types = list(self.cars.keys())
-        for idx, car_type in enumerate(car_types, start=1):
-            print(f"{idx}. {car_type.capitalize()}")
-
-        try:
-            choice = int(input("\nKerakli tur raqamini tanlang: ")) - 1
-            if 0 <= choice < len(car_types):
-                return car_types[choice]
-            else:
-                raise ValueError
-        except ValueError:
-            print("Yaroqsiz tanlov. Iltimos, qayta urinib ko'ring.")
-            return self.choose_car_type()
-
-    def choose_car_model(self, car_type):
-        print(f"\n{car_type.capitalize()} uchun mavjud modellar:")
-        car_models = list(self.cars[car_type].items())
-        for idx, (model, price) in enumerate(car_models, start=1):
-            print(f"{idx}. {model} (${price})")
-
-        try:
-            choice = int(input("\nKerakli model raqamini tanlang: ")) - 1
-            if 0 <= choice < len(car_models):
-                model, price = car_models[choice]
-                return model, price
-            else:
-                raise ValueError
-        except ValueError:
-            print("Yaroqsiz model. Iltimos, qayta urinib ko'ring.")
-            return self.choose_car_model(car_type)
-
-    def choose_color(self):
-        print("\nRangini tanlang:")
-        for idx, color in enumerate(self.available_colors, start=1):
-            print(f"{idx}. {color.capitalize()}")
-
-        try:
-            choice = int(input("\nKerakli rang raqamini tanlang: ")) - 1
-            if 0 <= choice < len(self.available_colors):
-                return self.available_colors[choice]
-            else:
-                raise ValueError
-        except ValueError:
-            print("Yaroqsiz rang. Iltimos, qayta urinib ko'ring.")
-            return self.choose_color()
-
-    def confirm_selection(self, car_type, model, color):
-        print("\nSizning tanlovingiz xulosasi:")
-        print(f"Moshinga turi: {car_type.capitalize()}")
-        print(f"Modeli: {model}")
-        print(f"Rangi: {color.capitalize()}")
+    @staticmethod
+    def choose_option(options, title):
+        print(f"\n{title}")
+        for i, option in enumerate(options, start=1):
+            print(f"{i}. {option}")
 
         while True:
-            confirm = input("\nBu xaridni davom ettirmoqchimisiz? (ha/yoq): ").lower()
-            if confirm in ["ha", "yo1"] :
-
-                return confirm == "ha"
-            else:
-                print("Siz noto'g'ri javob berdingiz. Iltimos, 'ha' yoki 'yoq' deb javob bering.")
+            try:
+                choice = int(input("Raqamni tanlang: ")) - 1
+                if 0 <= choice < len(options):
+                    return options[choice]
+                else:
+                    print("Noto'g'ri raqam. Qayta urinib ko'ring.")
+            except ValueError:
+                print("Faqat raqam kiriting!")
 
     def run(self):
-        print("Avtomobil tanlash tizimiga xush kelibsiz!")
+        print("Xush kelibsiz! Avtomobil tanlash tizimi.")
 
-        car_type = self.choose_car_type()
-        model, price = self.choose_car_model(car_type)
-        color = self.choose_color()
+        car_types = list(self.cars.keys())
+        car_type = self.choose_option(car_types, "Mashina turini tanlang:")
 
-        if self.confirm_selection(car_type, model, color):
-            print(f"\nTabriklaymiz! Siz muvaffaqiyatli xarid qildingiz: {color.capitalize()} {model}.")
-            print(f"Umumiy narx: ${price}. Haridingiz uchun rahmat!")
-        else:
-            print("\nXarid bekor qilindi. Tashrifingiz uchun rahmat!")
+        car_models = list(self.cars[car_type].keys())
+        model = self.choose_option(car_models, f"{car_type.capitalize()} uchun modelni tanlang:")
+        price = self.cars[car_type][model]
 
+
+        color = self.choose_option(self.colors, "Mashina rangini tanlang:")
+
+
+        if color in self.price_increase:
+            price_increase_percentage = self.price_increase[color]
+            price_increase_amount = (price_increase_percentage / 100) * price
+            price += price_increase_amount
+            print(f"\n{color.capitalize()} rangdagi mashina narxi {price_increase_percentage}% ga oshdi!")
+
+        print("\nSiz tanlagan mashina:")
+        print(f"Tur: {car_type.capitalize()}")
+        print(f"Model: {model}")
+        print(f"Rang: {color.capitalize()}")
+        print(f"Narxi: ${price:.2f}")
+
+        while True:
+            confirm = input("Xaridni tasdiqlisizmi? (ha/yoq): ").lower()
+            if confirm == "ha":
+                print(f"\nTabrikliman! {color.capitalize()} rangdagi {model} {price}xarid qilindi.")
+                break
+            elif confirm == "yoq":
+                print("\nXarid bekor qilindi. Rahmat!")
+                break
+            else:
+                print("Siz notogri javob berdingiz. Iltimos, 'ha' yoki 'yoq' deb javob bering.")
+
+
+def main():
+    cars = {
+        "sedan": {"Toyota Camry": 25000, "Honda Accord": 24000},
+        "hatchback": {"Volkswagen Golf": 22000, "Ford Fiesta": 18000},
+        "suv": {"Toyota RAV4": 27000, "Honda CR-V": 26000}
+    }
+    colors = ["qora", "oq", "kulrang"]
+    price_increase = {
+        "qora": 2,
+        "oq": 5,
+        "kulrang": 10
+    }
+
+    system = CarSelectionSystem(cars, colors, price_increase)
+    system.run()
 
 if __name__ == "__main__":
-    system = CarSelectionSystem()
-    system.run()
+    main()
