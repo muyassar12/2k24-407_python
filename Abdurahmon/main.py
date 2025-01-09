@@ -1,132 +1,92 @@
-# Define available car types, brands, models, and prices
-car_catalog = {
-    "Sedan": {
-        "BMW": [("BMW 3 Series", 41000), ("BMW 5 Series", 54000)],
-        "Audi": [("Audi A4", 39000), ("Audi A6", 50000)],
-        "Mercedes": [("Mercedes C-Class", 42000), ("Mercedes E-Class", 54000)],
-        "Tesla": [("Tesla Model 3", 45000)],
-        "BYD": [("BYD Han", 30000)]
-    },
-    "SUV": {
-        "BMW": [("BMW X5", 61000), ("BMW X3", 43000)],
-        "Audi": [("Audi Q7", 55000), ("Audi Q5", 49000)],
-        "Mercedes": [("Mercedes GLE", 57000), ("Mercedes GLC", 49000)],
-        "Tesla": [("Tesla Model X", 89000), ("Tesla Model Y", 50000)],
-        "BYD": [("BYD Tang", 32000)]
-    },
-    "Hatchback": {
-        "BMW": [("BMW 1 Series", 35000)],
-        "Audi": [("Audi A3", 33000)],
-        "Mercedes": [("Mercedes A-Class", 34000)],
-        "BYD": [("BYD e2", 20000)]
-    },
-    "Coupe": {
-        "BMW": [("BMW 2 Series", 38000)],
-        "Audi": [("Audi TT", 45000)],
-        "Mercedes": [("Mercedes CLA", 37000)]
-    },
-    "Minivan": {
-        "BMW": [],
-        "Audi": [],
-        "Mercedes": [("Mercedes V-Class", 60000)],
-        "Tesla": [],
-        "BYD": [("BYD Song MAX", 25000)]
-    }
-}
+class Car:
+    def __init__(self, name, price):
+        self.name = name
+        self.price = price
 
-colors = ["Black", "White", "Gray"]
+    def select_type(self, my_car):
+        while True:
+            turi = input("Iltimos, mashina turini tanlang:\n1 = Sedan\n2 = Hatchback\n3 = Miniwen\n4 = Suv\n")
+            if turi == '1':
+                my_car["Type"] = "Sedan"
+                print(f"1. BMW M5 = 25000\n2. Audi RS = 9000\n3. Malibu = 12000")
+                break
+            elif turi == '2':
+                my_car["Type"] = "Hatchback"
+                print(f"1. Opel Rocks = 7000\n2. Toyota Corolla = 9000\n3. Ford Focus = 12000")
+                break
+            elif turi == '3':
+                my_car["Type"] = "Miniwen"
+                print(f"1. Car Max = 23000\n2. Sienna Hybrid = 25000\n3. Odyssey = 29000")
+                break
+            elif turi == '4':
+                my_car["Type"] = "Suv"
+                print(f"1. Hyundai Tucson = 20000\n2. Mazda CX = 15000\n3. Kia Sportage = 15000")
+                break
+            else:
+                print("Noto'g'ri tanlov. Qayta urinib ko'ring.")
 
+    def select_model(self, my_car):
+        model_dict = {
+            "Sedan": [("BMW M5", 25000), ("Audi RS", 9000), ("Malibu", 12000)],
+            "Hatchback": [("Opel Rocks", 7000), ("Toyota Corolla", 9000), ("Ford Focus", 12000)],
+            "Miniwen": [("Car Max", 23000), ("Sienna Hybrid", 25000), ("Odyssey", 29000)],
+            "Suv": [("Hyundai Tucson", 20000), ("Mazda CX", 15000), ("Kia Sportage", 15000)],
+        }
+        while True:
+            model = input("O'zingizga kerakli bo'lgan mashina modelini tanlang (1, 2, 3): ")
+            if model in ["1", "2", "3"]:
+                index = int(model) - 1
+                car = model_dict[my_car["Type"]][index]
+                my_car["Model"] = car[0]
+                my_car["Price"] = car[1]
+                print(f"Sizning mashinangiz {car[0]} narxi: {car[1]}")
+                break
+            else:
+                print("Noto'g'ri tanlov. Qayta urinib ko'ring.")
 
-def display_options(options):
-    for idx, option in enumerate(options, 1):
-        print(f"{idx}. {option}")
-    try:
-        choice = int(input("Enter the number of your choice: ")) - 1
-        if choice < 0 or choice >= len(options):
-            raise ValueError("Invalid selection")
-        return choice
-    except ValueError as e:
-        print(f"Error: {e}")
-        return None
-
-
-def select_car_type():
-    print("Select Car Type:")
-    car_types = list(car_catalog.keys())
-    choice = display_options(car_types)
-    if choice is None:
-        return None
-    return car_types[choice]
-
-
-def select_car_brand(car_type):
-    print(f"Select Car Brand for {car_type}:")
-    car_brands = list(car_catalog[car_type].keys())
-    choice = display_options(car_brands)
-    if choice is None:
-        return None
-    return car_brands[choice]
-
-
-def select_car_model(car_type, car_brand):
-    print(f"Select a model from {car_brand} ({car_type}):")
-    models = car_catalog[car_type][car_brand]
-    if not models:
-        print(f"No models available for {car_brand} in {car_type}. Please select another brand or type.")
-        return None
-    model_names = [model[0] for model in models]
-    choice = display_options(model_names)
-    if choice is None:
-        return None
-    return models[choice]
-
-
-def select_car_color():
-    print("Select Car Color:")
-    choice = display_options(colors)
-    if choice is None:
-        return None
-    return colors[choice]
-
-
-def confirm_selection(car_type, car_brand, car_model, car_color):
-    if not car_model:
-        return False
-    model_name, model_price = car_model
-    print("\nConfirmation of selection:")
-    print(f"Car Type: {car_type}")
-    print(f"Car Brand: {car_brand}")
-    print(f"Car Model: {model_name}")
-    print(f"Car Color: {car_color}")
-    print(f"Total Price: ${model_price}")
-    confirmation = input("Do you want to proceed with the purchase? (yes/no): ")
-    return confirmation.lower() == 'yes'
+    def select_color(self, my_car):
+        print("1. Black (0%)\n2. White (+20%)\n3. Gray (+10%)")
+        while True:
+            color = input("Iltimos, kerakli rangni tanlang: ")
+            if color == "1":
+                my_car["Color"] = "Black"
+                break
+            elif color == "2":
+                my_car["Color"] = "White"
+                my_car["Price"] *= 1.2
+                break
+            elif color == "3":
+                my_car["Color"] = "Gray"
+                my_car["Price"] *= 1.1
+                break
+            else:
+                print("Noto'g'ri tanlov. Qayta urinib ko'ring.")
+        print(f"Sizning mashinangiz {my_car['Model']}, rangi: {my_car['Color']}, narxi: {int(my_car['Price'])}")
 
 
 def main():
-    try:
-        car_type = select_car_type()
-        if car_type is None:
-            return
-        car_brand = select_car_brand(car_type)
-        if car_brand is None:
-            return
-        car_model = select_car_model(car_type, car_brand)
-        if car_model is None:
-            return
-        car_color = select_car_color()
-        if car_color is None:
-            return
+    my_car = {"Type": "", "Model": "", "Color": "", "Price": 0}
+    print("Asalomu aleykum hurmatli mijoz!")
+    car = Car("", 0)
+    car.select_type(my_car)
+    car.select_model(my_car)
+    car.select_color(my_car)
 
-        if confirm_selection(car_type, car_brand, car_model, car_color):
-            model_name, model_price = car_model
-            print("\nPayment and completion of purchase:")
-            print(
-                f"Your purchase of a {car_color} {model_name} ({car_brand} - {car_type}) for ${model_price} is complete.")
-        else:
-            print("Purchase cancelled.")
-    except Exception as e:
-        print(f"An unexpected error occurred: {e}")
+    buy = input("Mashina sotib olishni xohlaysizmi? (yes/no): ").lower()
+    if buy == "yes":
+        print(f"Iltimos, to'lov qiling. Sizdan {int(my_car['Price'])} talab qilinadi.")
+        while True:
+            tolov = input("To'lov qilish uchun 1 ni bosing yoki 'exit' deb yozing: ")
+            if tolov == "1":
+                print("Xaridingiz uchun rahmat!")
+                break
+            elif tolov == "exit":
+                print("Tashrifingiz uchun rahmat!")
+                break
+            else:
+                print("Noto'g'ri kiritingiz, qayta urinib ko'ring.")
+    else:
+        print("Tashrifingiz uchun rahmat! Yana kutib qolamiz.")
 
 
 if __name__ == "__main__":
