@@ -24,3 +24,12 @@ class Purchase:
         total_price = self.calculate_price(model, car_color_choice)
         print(f"\\nTanlangan avtomobil: {model['name']} {self.cars[str(car_type)]['type']} ({self.colors[car_color_choice][0]})")
         print(f"Narxi: ${total_price}")
+        decision = input("\nSiz ushbu avtomobilni sotib olasizmi? (ha/yo'q): ").strip().lower()
+
+        if decision == "ha":
+            print("Tabriklaymiz! Siz avtomobilni sotib oldingiz.")
+        elif decision == "yo'q":
+            print("Afsus! Siz avtomobilni sotib olmadingiz.")
+        else:
+            print("Noto'g'ri tanlov. Iltimos, 'ha' yoki 'yo'q' deb javob bering.")
+
