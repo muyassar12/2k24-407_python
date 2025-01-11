@@ -3,29 +3,40 @@ class Car:
         self.name = name
         self.price = price
 
-    def select_type(self, my_car):
+    @staticmethod
+    def display_car_types():
+        print("1 = Sedan\n2 = Hatchback\n3 = Miniwen\n4 = Suv")
+
+    @staticmethod
+    def display_models(car_type):
+        model_dict = {
+            "Sedan": [("BMW M5", 25000), ("Audi RS", 9000), ("Malibu", 12000)],
+            "Hatchback": [("Opel Rocks", 7000), ("Toyota Corolla", 9000), ("Ford Focus", 12000)],
+            "Miniwen": [("Car Max", 23000), ("Sienna Hybrid", 25000), ("Odyssey", 29000)],
+            "Suv": [("Hyundai Tucson", 20000), ("Mazda CX", 15000), ("Kia Sportage", 15000)],
+        }
+        for i, (model, price) in enumerate(model_dict[car_type], 1):
+            print(f"{i}. {model} = {price}")
+
+    @staticmethod
+    def select_type():
         while True:
-            turi = input("Iltimos, mashina turini tanlang:\n1 = Sedan\n2 = Hatchback\n3 = Miniwen\n4 = Suv\n")
-            if turi == '1':
-                my_car["Type"] = "Sedan"
-                print(f"1. BMW M5 = 25000\n2. Audi RS = 9000\n3. Malibu = 12000")
-                break
-            elif turi == '2':
-                my_car["Type"] = "Hatchback"
-                print(f"1. Opel Rocks = 7000\n2. Toyota Corolla = 9000\n3. Ford Focus = 12000")
-                break
-            elif turi == '3':
-                my_car["Type"] = "Miniwen"
-                print(f"1. Car Max = 23000\n2. Sienna Hybrid = 25000\n3. Odyssey = 29000")
-                break
-            elif turi == '4':
-                my_car["Type"] = "Suv"
-                print(f"1. Hyundai Tucson = 20000\n2. Mazda CX = 15000\n3. Kia Sportage = 15000")
-                break
+            Car.display_car_types()
+            car_type_choice = input("Iltimos, mashina turini tanlang: ")
+            # Map the numeric input to car type names
+            car_types = {
+                '1': 'Sedan',
+                '2': 'Hatchback',
+                '3': 'Miniwen',
+                '4': 'Suv'
+            }
+            if car_type_choice in car_types:
+                return car_types[car_type_choice]
             else:
                 print("Noto'g'ri tanlov. Qayta urinib ko'ring.")
 
-    def select_model(self, my_car):
+    @staticmethod
+    def select_model(car_type):
         model_dict = {
             "Sedan": [("BMW M5", 25000), ("Audi RS", 9000), ("Malibu", 12000)],
             "Hatchback": [("Opel Rocks", 7000), ("Toyota Corolla", 9000), ("Ford Focus", 12000)],
@@ -33,60 +44,68 @@ class Car:
             "Suv": [("Hyundai Tucson", 20000), ("Mazda CX", 15000), ("Kia Sportage", 15000)],
         }
         while True:
-            model = input("O'zingizga kerakli bo'lgan mashina modelini tanlang (1, 2, 3): ")
-            if model in ["1", "2", "3"]:
-                index = int(model) - 1
-                car = model_dict[my_car["Type"]][index]
-                my_car["Model"] = car[0]
-                my_car["Price"] = car[1]
-                print(f"Sizning mashinangiz {car[0]} narxi: {car[1]}")
-                break
+            Car.display_models(car_type)  # Pass the actual car type name
+            model_choice = input("O'zingizga kerakli bo'lgan mashina modelini tanlang (1, 2, 3): ")
+            if model_choice in ['1', '2', '3']:
+                model, price = model_dict[car_type][int(model_choice) - 1]
+                return model, price
             else:
                 print("Noto'g'ri tanlov. Qayta urinib ko'ring.")
 
-    def select_color(self, my_car):
-        print("1. Black (0%)\n2. White (+20%)\n3. Gray (+10%)")
+    @staticmethod
+    def select_color():
         while True:
-            color = input("Iltimos, kerakli rangni tanlang: ")
-            if color == "1":
-                my_car["Color"] = "Black"
-                break
-            elif color == "2":
-                my_car["Color"] = "White"
-                my_car["Price"] *= 1.2
-                break
-            elif color == "3":
-                my_car["Color"] = "Gray"
-                my_car["Price"] *= 1.1
-                break
+            print("1. Black (0%)\n2. White (+20%)\n3. Gray (+10%)")
+            color_choice = input("Iltimos, kerakli rangni tanlang: ")
+            if color_choice == "1":
+                return "Black", 0
+            elif color_choice == "2":
+                return "White", 1.2
+            elif color_choice == "3":
+                return "Gray", 1.1
             else:
                 print("Noto'g'ri tanlov. Qayta urinib ko'ring.")
-        print(f"Sizning mashinangiz {my_car['Model']}, rangi: {my_car['Color']}, narxi: {int(my_car['Price'])}")
 
-
-def main():
-    my_car = {"Type": "", "Model": "", "Color": "", "Price": 0}
-    print("Asalomu aleykum hurmatli mijoz!")
-    car = Car("", 0)
-    car.select_type(my_car)
-    car.select_model(my_car)
-    car.select_color(my_car)
-
-    buy = input("Mashina sotib olishni xohlaysizmi? (yes/no): ").lower()
-    if buy == "yes":
-        print(f"Iltimos, to'lov qiling. Sizdan {int(my_car['Price'])} talab qilinadi.")
+    @staticmethod
+    def handle_purchase(price):
         while True:
-            tolov = input("To'lov qilish uchun 1 ni bosing yoki 'exit' deb yozing: ")
-            if tolov == "1":
+            tolov = input(f"To'lov qilish uchun {int(price)} so'mni to'lashni xohlaysizmi? (yes/no): ").lower()
+            if tolov == "yes":
                 print("Xaridingiz uchun rahmat!")
                 break
-            elif tolov == "exit":
+            elif tolov == "no":
                 print("Tashrifingiz uchun rahmat!")
+                break
+            elif tolov == "exit":
+                print("Tashrifingiz uchun rahmat! Yana kutib qolamiz.")
                 break
             else:
                 print("Noto'g'ri kiritingiz, qayta urinib ko'ring.")
-    else:
-        print("Tashrifingiz uchun rahmat! Yana kutib qolamiz.")
+
+
+def main():
+    print("Asalomu aleykum hurmatli mijoz!")
+    my_car = {"Type": "", "Model": "", "Color": "", "Price": 0}
+
+    # Select car type
+    car_type = Car.select_type()
+    my_car["Type"] = car_type
+
+    # Select car model
+    model, price = Car.select_model(car_type)
+    my_car["Model"] = model
+    my_car["Price"] = price
+
+    # Select car color
+    color, price_multiplier = Car.select_color()
+    my_car["Color"] = color
+    my_car["Price"] *= price_multiplier
+
+    # Show the selected car info
+    print(f"Sizning mashinangiz {my_car['Model']} rangi: {my_car['Color']}, narxi: {int(my_car['Price'])}")
+
+    # Handle purchase decision
+    Car.handle_purchase(my_car['Price'])
 
 
 if __name__ == "__main__":
