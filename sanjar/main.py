@@ -96,10 +96,7 @@ class CarSelectionSystem:
         self.confirm_selection()
 
 
-def main():
-    system = CarSelectionSystem()
-    system.run()
-
 if __name__ == "__main__":
     main()
+    system = CarSelectionSystem()
 
