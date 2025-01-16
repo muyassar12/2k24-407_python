@@ -90,13 +90,14 @@ class CarSelectionSystem:
 
     def run(self):
         print("Welcome to the Car Selection System!")
-        car_type = self.select_car_type()
-        self.select_car_model(car_type)
-        self.select_car_color()
-        self.confirm_selection()
 
+def main():
+    system = CarSelectionSystem()
+    system.select_car_type()
+    system.select_car_model(system.select_car_type())
+    system.select_car_color()
+    system.confirm_selection()
 
 if __name__ == "__main__":
     main()
-    system = CarSelectionSystem()
 
