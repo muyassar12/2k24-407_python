@@ -1,25 +1,16 @@
 class CarType:
-    """
-    Avtomobil turlari va mavjud ranglarini aniqlash uchun klass.
-    """
     def __init__(self, name, available_colors):
         self.name = name
         self.available_colors = available_colors
 
 
-class CarModel:
-    """
-    Avtomobil modellari va narxlarini aniqlash uchun klass.
-    """
+class CarModel:                                  
     def __init__(self, name, price):
         self.name = name
         self.price = price
 
 
 class Car:
-    """
-    Tanlangan avtomobilni yaratish va uning ma'lumotlarini ko'rsatish uchun klass.
-    """
     def __init__(self, car_type, car_model, color):
         self.car_type = car_type
         self.car_model = car_model
@@ -27,14 +18,12 @@ class Car:
         self.price = car_model.price
 
     def display_info(self):
-        """Avtomobil ma'lumotlarini konsolda chiqaradi."""
         print(f"Avtomobil turi: {self.car_type.name}")
         print(f"Avtomobil modeli: {self.car_model.name}")
         print(f"Rang: {self.color}")
         print(f"Narxi: ${self.price}")
 
 
-# Avtomobil turlari
 car_types = [
     CarType("Sedan", ["Qora", "Oq", "Kulrang"]),
     CarType("Hatchback", ["Qora", "Oq", "Kulrang"]),
@@ -43,7 +32,6 @@ car_types = [
     CarType("SUV", ["Qora", "Oq", "Kulrang"])
 ]
 
-# Avtomobil modellari
 car_models = [
     CarModel("Toyota Camry", 30000),
     CarModel("Honda Civic", 32000),
@@ -53,7 +41,6 @@ car_models = [
 ]
 
 while True:
-    # Avtomobil turini tanlash
     print("\nAvtomobil turini tanlang:")
     for i, car_type in enumerate(car_types):
         print(f"{i + 1}. {car_type.name}")
@@ -69,7 +56,6 @@ while True:
 
     selected_car_type = car_types[car_type_choice - 1]
 
-    # Avtomobil modelini tanlash
     print("\nAvtomobil modelini tanlang:")
     for i, car_model in enumerate(car_models):
         print(f"{i + 1}. {car_model.name} - ${car_model.price}")
@@ -85,7 +71,6 @@ while True:
 
     selected_car_model = car_models[car_model_choice - 1]
 
-    # Rangni tanlash
     print("\nRangni tanlang:")
     for i, color in enumerate(selected_car_type.available_colors):
         print(f"{i + 1}. {color}")
@@ -101,12 +86,10 @@ while True:
 
     selected_color = selected_car_type.available_colors[color_choice - 1]
 
-    # Avtomobilni yaratish va ma'lumotni chiqarish
     car = Car(selected_car_type, selected_car_model, selected_color)
     print("\nTanlangan avtomobil ma'lumotlari:")
     car.display_info()
 
-    # Tasdiqlash
     confirm = input("\nUshbu avtomobilni sotib olishni xohlaysizmi? (Ha/Yo'q) ").strip().lower()
     if confirm == "ha":
         print("Xarid amalga oshirildi.")
