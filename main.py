@@ -1,87 +1,65 @@
-class Moshina:
-    def __init__(self, car_type, model, color):
-        self.car_type = car_type
-        self.model = model
-        self.color = color
-        self.narxlar = {
-            "Sedan": 20000,
-            "Jip": 30000,
-            "Hatchback": 15000,
-            "Krossover": 25000
-        }
-        self.base_price = self.narxlar.get(self.car_type, 0)
-        self.final_price = self.calculate_final_price()
+import time
+import psycopg2
+from selenium import webdriver
+from selenium.webdriver.common.by import By
+from selenium.webdriver.chrome.service import Service
+from webdriver_manager.chrome import ChromeDriverManager
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
 
-    def calculate_final_price(self):
-        additional_fees = 2000
-        return self.base_price + additional_fees
+# === Selenium bilan sahifani ochamiz ===
+driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+driver.get("https://shaxzodbek.com/")
 
-    def yakuniy_malumot(self):
-        print("\nSiz tanlagan moshina:")
-        print(f"Tur: {self.car_type}")
-        print(f"Nomi: {self.model}")
-        print(f"Rang: {self.color}")
-        print(f"Narxi: ${self.final_price:,} USD")
+# Kirish tugmasini bosamiz
+login_button = WebDriverWait(driver, 2).until(
+    EC.element_to_be_clickable((By.XPATH, "/html/body/header/div/nav/ul/li[4]/a")))
+login_button.click()
 
+# Kirish sahifasida scroll qilish
+login_button2 = WebDriverWait(driver, 2).until(
+    EC.presence_of_element_located((By.XPATH, "/html/body/main/section/div[2]/a[1]")))
+driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", login_button2)
+time.sleep(2)
+login_button2.click()
 
-class CarDealership:
-    def __init__(self):
-        self.car_type = None
-        self.model = None
-        self.color = None
-        self.selected_car = None
+# Sertifikat sahifasiga o‘tamiz
+login_button3 = WebDriverWait(driver, 2).until(
+    EC.element_to_be_clickable((By.XPATH, "/html/body/main/section/div[1]/div/div[3]/div[2]/h4/a")))
+driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", login_button3)
+login_button3.click()
+time.sleep(2)
 
-    def valid_input(self, prompt, options):
-        while True:
-            try:
-                choice = int(input(prompt))
-                if 1 <= choice <= len(options):
-                    return options[choice - 1]
-                else:
-                    print(f"Xato! Iltimos, 1 dan {len(options)} gacha bo'lgan raqamni kiriting.")
-            except ValueError:
-                print("Xato! Faqat son kiriting.")
+# === Sahifadagi kerakli ma’lumotlarni avtomatik olish ===
+title = driver.find_element(By.CSS_SELECTOR, ".certification-header h3").text
+obtained_date = driver.find_element(By.CLASS_NAME, "certification-date").text.replace("Obtained: ", "")
+image_url = driver.find_element(By.CSS_SELECTOR, ".certification-image img").get_attribute("src")
+description = driver.find_element(By.CLASS_NAME, "certification-description").text.strip()
 
-    def select_car_type(self):
-        print("\nMoshina turini tanlang:")
-        options = ["Sedan", "Jip", "Hatchback", "Krossover"]
-        for i, option in enumerate(options, 1):
-            print(f"{i}. {option}")
-        self.car_type = self.valid_input("Tanlovni kiriting (1-4): ", options)
+# === Konsolga chop etish (tekshirish uchun) ===
+print("Title:", title)
+print("Obtained Date:", obtained_date)
+print("Image URL:", image_url)
+print("Description:", description)
 
-    def select_car_model(self):
-        print("\nMoshina modelini tanlang:")
-        models = ["Chevrolet Malibu", "Toyota Camry", "Kia Sportage", "Hyundai Tucson"]
-        for i, model in enumerate(models, 1):
-            print(f"{i}. {model}")
-        self.model = self.valid_input("Tanlovni kiriting (1-4): ", models)
+# === PostgreSQL bazaga ulanish ===
+conn = psycopg2.connect(
+    host="localhost",  # yoki RDS/PostgreSQL host
+    database="selenuim",
+    user="postgres",
+    password="admin1234"
+)
+cur = conn.cursor()
 
-    def select_color(self):
-        print("\nMoshina rangini tanlang:")
-        colors = ["Qora", "Oq", "Qizil", "Ko'k"]
-        for i, color in enumerate(colors, 1):
-            print(f"{i}. {color}")
-        self.color = self.valid_input("Tanlovni kiriting (1-4): ", colors)
+# SQL query yuborish
+cur.execute("""
+    INSERT INTO certifications (title, public_date, image_url, description)
+    VALUES (%s, %s, %s, %s);
+""", (title, obtained_date, image_url, description))
 
-    def confirm_selection(self):
-        print("\nTanlangan ma'lumotlar:")
-        print(f"Tur: {self.car_type}")
-        print(f"Nomi: {self.model}")
-        print(f"Rang: {self.color}")
+# O'zgarishlarni saqlaymiz va ulanishni yopamiz
+conn.commit()
+cur.close()
+conn.close()
 
-    def complete_purchase(self):
-        self.selected_car = Moshina(self.car_type, self.model, self.color)
-        self.selected_car.yakuniy_malumot()
-
-
-def main():
-    dealership = CarDealership()
-    dealership.select_car_type()
-    dealership.select_car_model()
-    dealership.select_color()
-    dealership.confirm_selection()
-    dealership.complete_purchase()
-
-
-if __name__ == "__main__":
-    main()
+print("✅ Sertifikat ma'lumotlari muvaffaqiyatli qo‘shildi.")
