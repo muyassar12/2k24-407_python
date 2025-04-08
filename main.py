@@ -20,7 +20,7 @@ login_button.click()
 login_button2 = WebDriverWait(driver, 2).until(
     EC.presence_of_element_located((By.XPATH, "/html/body/main/section/div[2]/a[1]")))
 driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", login_button2)
-time.sleep(2)
+WebDriverWait(driver, 2).until(EC.element_to_be_clickable((By.XPATH, "/html/body/main/section/div[2]/a[1]")))
 login_button2.click()
 
 # Sertifikat sahifasiga o‘tamiz
