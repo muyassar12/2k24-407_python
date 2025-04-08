@@ -45,7 +45,7 @@ print("Description:", description)
 # === PostgreSQL bazaga ulanish ===
 conn = psycopg2.connect(
     host="localhost",  # yoki RDS/PostgreSQL host
-    database="selenuim",
+    database="selenium",
     user="postgres",
     password="admin1234"
 )
