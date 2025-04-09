@@ -17,6 +17,7 @@ driver.get("https://shaxzodbek.com/")
 login_button = wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/header/div/nav/ul/li[4]/a")))
 login_button.click()
 
+<<<<<<< HEAD
 # Kirish sahifasidagi tugmani topamiz
 login_button2 = wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/main/section/div[2]/a[1]")))
 
@@ -24,6 +25,14 @@ login_button2 = wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/mai
 driver.execute_script("arguments[0].scrollIntoView(true);", login_button2)
 time.sleep(1)
 driver.execute_script("arguments[0].click();", login_button2)
+=======
+# Kirish sahifasida scroll qilish
+login_button2 = WebDriverWait(driver, 2).until(
+    EC.presence_of_element_located((By.XPATH, "/html/body/main/section/div[2]/a[1]")))
+driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", login_button2)
+WebDriverWait(driver, 2).until(EC.element_to_be_clickable((By.XPATH, "/html/body/main/section/div[2]/a[1]")))
+login_button2.click()
+>>>>>>> a0ce6c6fcc0dc62f1b2d8aed195d456ee17e1dc6
 
 # Sertifikat sahifasiga o‘tamiz
 login_button3 = wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/main/section/div[1]/div/div[3]/div[2]/h4/a")))
@@ -45,8 +54,13 @@ print("Description:", description)
 
 # === PostgreSQL bazaga ulanish ===
 conn = psycopg2.connect(
+<<<<<<< HEAD
     host="localhost",
     database="selenuim",
+=======
+    host="localhost",  # yoki RDS/PostgreSQL host
+    database="selenium",
+>>>>>>> a0ce6c6fcc0dc62f1b2d8aed195d456ee17e1dc6
     user="postgres",
     password="admin1234"
 )
