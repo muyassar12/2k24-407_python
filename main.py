@@ -6,32 +6,33 @@ from selenium.webdriver.chrome.service import Service
 from webdriver_manager.chrome import ChromeDriverManager
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
+from selenium.webdriver.common.action_chains import ActionChains
 
 # === Selenium bilan sahifani ochamiz ===
 driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()))
+wait = WebDriverWait(driver, 15)  # kutish vaqtini ko‘paytirdik
 driver.get("https://shaxzodbek.com/")
 
 # Kirish tugmasini bosamiz
-login_button = WebDriverWait(driver, 2).until(
-    EC.element_to_be_clickable((By.XPATH, "/html/body/header/div/nav/ul/li[4]/a")))
+login_button = wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/header/div/nav/ul/li[4]/a")))
 login_button.click()
 
-# Kirish sahifasida scroll qilish
-login_button2 = WebDriverWait(driver, 2).until(
-    EC.presence_of_element_located((By.XPATH, "/html/body/main/section/div[2]/a[1]")))
-driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", login_button2)
-time.sleep(2)
-login_button2.click()
+# Kirish sahifasidagi tugmani topamiz
+login_button2 = wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/main/section/div[2]/a[1]")))
+
+# Scroll qilish va click (intercepted bo‘lmasligi uchun)
+driver.execute_script("arguments[0].scrollIntoView(true);", login_button2)
+time.sleep(1)
+driver.execute_script("arguments[0].click();", login_button2)
 
 # Sertifikat sahifasiga o‘tamiz
-login_button3 = WebDriverWait(driver, 2).until(
-    EC.element_to_be_clickable((By.XPATH, "/html/body/main/section/div[1]/div/div[3]/div[2]/h4/a")))
-driver.execute_script("arguments[0].scrollIntoView({behavior: 'smooth', block: 'center'});", login_button3)
-login_button3.click()
-time.sleep(2)
+login_button3 = wait.until(EC.element_to_be_clickable((By.XPATH, "/html/body/main/section/div[1]/div/div[3]/div[2]/h4/a")))
+driver.execute_script("arguments[0].scrollIntoView(true);", login_button3)
+time.sleep(1)
+driver.execute_script("arguments[0].click();", login_button3)
 
 # === Sahifadagi kerakli ma’lumotlarni avtomatik olish ===
-title = driver.find_element(By.CSS_SELECTOR, ".certification-header h3").text
+title = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".certification-header h3"))).text
 obtained_date = driver.find_element(By.CLASS_NAME, "certification-date").text.replace("Obtained: ", "")
 image_url = driver.find_element(By.CSS_SELECTOR, ".certification-image img").get_attribute("src")
 description = driver.find_element(By.CLASS_NAME, "certification-description").text.strip()
@@ -44,22 +45,41 @@ print("Description:", description)
 
 # === PostgreSQL bazaga ulanish ===
 conn = psycopg2.connect(
-    host="localhost",  # yoki RDS/PostgreSQL host
+    host="localhost",
     database="selenuim",
     user="postgres",
     password="admin1234"
 )
 cur = conn.cursor()
 
-# SQL query yuborish
+# 1. Jadval mavjudligini tekshiramiz va yo‘q bo‘lsa yaratamiz
+cur.execute("""
+    CREATE TABLE IF NOT EXISTS certifications (
+        id SERIAL PRIMARY KEY,
+        title TEXT NOT NULL,
+        public_date TEXT NOT NULL,
+        image_url TEXT,
+        description TEXT
+    );
+""")
+
+# 2. Avvalgi ma’lumotlarni tozalash
+cur.execute("""
+    DELETE FROM certifications
+    WHERE title = %s AND public_date = %s;
+""", (title, obtained_date))
+
+# 3. INSERT yangi ma'lumot
 cur.execute("""
     INSERT INTO certifications (title, public_date, image_url, description)
     VALUES (%s, %s, %s, %s);
 """, (title, obtained_date, image_url, description))
 
-# O'zgarishlarni saqlaymiz va ulanishni yopamiz
 conn.commit()
 cur.close()
 conn.close()
 
 print("✅ Sertifikat ma'lumotlari muvaffaqiyatli qo‘shildi.")
+
+# Brauzerni yopish
+driver.quit()
