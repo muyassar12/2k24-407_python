@@ -1,4 +1,5 @@
 from db.init_db import insert_content_card
+from scraper.base_scraper import testing
 
 # insert_content_card(
 #         "Post",
@@ -8,3 +9,4 @@ from db.init_db import insert_content_card
 #         "2025-01-10","https://example.com/posts/python1",
 #         "Python"
 #     )
+testing()
