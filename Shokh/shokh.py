@@ -73,7 +73,7 @@ def save_to_db(title, public_date, image_url, description):
     cur = conn.cursor()
 
     cur.execute("""
-        CREATE TABLE IF NOT EXISTS certifications (
+        CREATE TABLE IF NOT EXISTS table_name (
             id SERIAL PRIMARY KEY,
             title TEXT NOT NULL,
             public_date TEXT NOT NULL,
