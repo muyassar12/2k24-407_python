@@ -1,10 +1,8 @@
 import psycopg2
-
 def save_to_db(title, public_date, image_url, description):
     title = title.encode('utf-8', errors='ignore').decode('utf-8')
     public_date = public_date.encode('utf-8', errors='ignore').decode('utf-8')
     description = description.encode('utf-8', errors='ignore').decode('utf-8')
-
     try:
         conn = psycopg2.connect(
             host="localhost",
@@ -39,7 +37,7 @@ def save_to_db(title, public_date, image_url, description):
         cur.close()
         conn.close()
 
-        print("✅ Ma'lumotlar bazaga muvaffaqiyatli yozildi.")
+        print(" Ma'lumotlar bazaga muvaffaqiyatli yozildi.")
 
     except Exception as e:
-        print(f"❌ Bazaga yozishda xatolik: {e}")
+        print(f" Bazaga yozishda xatolik: {e}")
