@@ -11,7 +11,7 @@ def setup_driver():
     options = webdriver.ChromeOptions()
     options.add_argument("--start-maximized")
     driver = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
-    driver.set_page_load_timeout(180)  # Sahifa yuklanishi uchun vaqtni oshirdik (180 soniya)
+    driver.set_page_load_timeout(180)
     return driver, WebDriverWait(driver, 30)
 
 def find_and_click_project(driver, wait):
@@ -26,19 +26,19 @@ def find_and_click_project(driver, wait):
     cards = driver.find_elements(By.CSS_SELECTOR, "h3 a")
     for card in cards:
         if "Portfolio Website" in card.text:
-            print(f"✅ '{card.text}' topildi. Ichkariga ketyapmiz...")
+            print(f" '{card.text}' topildi. Ichkariga ketyapmiz...")
             driver.execute_script("arguments[0].scrollIntoView({block: 'center'});", card)
             time.sleep(1)
             card.click()
             return
 
-    raise Exception("❌ 'Portfolio Website' kartasi topilmadi!")
+    raise Exception(" 'Portfolio Website' kartasi topilmadi!")
 
 def extract_project_data(driver, wait):
     try:
         title = wait.until(EC.presence_of_element_located((By.CSS_SELECTOR, ".project-header h1"))).text
     except:
-        print("❌ Title topilmadi.")
+        print(" Title topilmadi.")
         raise
 
     date_range = driver.find_element(By.CSS_SELECTOR, ".project-date").text.strip()
