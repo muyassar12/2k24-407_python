@@ -73,7 +73,7 @@ def save_to_db(title, public_date, image_url, description):
     cur = conn.cursor()
 
     cur.execute("""
-        CREATE TABLE IF NOT EXISTS table_name (
+        CREATE TABLE IF NOT EXISTS certificates (
             id SERIAL PRIMARY KEY,
             title TEXT NOT NULL,
             public_date TEXT NOT NULL,
@@ -83,12 +83,12 @@ def save_to_db(title, public_date, image_url, description):
     """)
 
     cur.execute("""
-        DELETE FROM table_name
+        DELETE FROM certificates
         WHERE title = %s AND public_date = %s;
     """, (title, public_date))
 
     cur.execute("""
-        INSERT INTO table_name (title, public_date, image_url, description)
+        INSERT INTO certificates (title, public_date, image_url, description)
         VALUES (%s, %s, %s, %s);
     """, (title, public_date, image_url, description))
 
