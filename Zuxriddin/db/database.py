@@ -26,7 +26,7 @@ class DatabaseManager:
                 date VARCHAR(100),
                 image_url TEXT,
                 description TEXT,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                extra_description JSON
             );
             """
             self.cursor.execute(create_table_query)
@@ -48,8 +48,8 @@ class DatabaseManager:
 
         try:
             insert_query = """
-            INSERT INTO certifications (title, date, image_url, description)
-            VALUES (%s, %s, %s, %s);
+            INSERT INTO certifications (title, date, image_url, description, extra_description)
+            VALUES (%s, %s, %s, %s, %s);
             """
             self.cursor.execute(
                 insert_query,
@@ -58,6 +58,7 @@ class DatabaseManager:
                     data.get("date", ""),
                     data.get("image_url", ""),
                     data.get("description", ""),
+                    data.get("extra_description", ""),
                 ),
             )
             self.conn.commit()

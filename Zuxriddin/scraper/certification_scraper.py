@@ -1,3 +1,4 @@
+import json
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
@@ -10,6 +11,7 @@ class CertificationScraper:
         self.driver = driver
         self.wait = WebDriverWait(driver, wait_timeout)
         self.collected_data = {}
+        self.extra_description = {}
 
     def _click_navigation(self, navigation):
         self.driver.get("https://shaxzodbek.com")
@@ -72,6 +74,46 @@ class CertificationScraper:
                 (By.XPATH, "//main/section/div/div[1]/div[2]")
             )
         ).text
+
+        self.extra_description["header"] = self.wait.until(
+            EC.presence_of_element_located(
+                (By.XPATH, "//main/section/div/div[1]/div[2]/div/h2")
+            )
+        ).text
+
+        self.extra_description["description"] = self.wait.until(
+            EC.presence_of_element_located(
+                (By.XPATH, "//main/section/div/div[1]/div[2]/div/p[1]")
+            )
+        ).text
+
+        self.extra_description["design_tools"] = self.wait.until(
+            EC.presence_of_element_located(
+                (By.XPATH, "//main/section/div/div[1]/div[2]/div/ul/li[1]")
+            )
+        ).text
+
+        self.extra_description["user_research"] = self.wait.until(
+            EC.presence_of_element_located(
+                (By.XPATH, "//main/section/div/div[1]/div[2]/div/ul/li[2]")
+            )
+        ).text
+
+        self.extra_description["prototyping"] = self.wait.until(
+            EC.presence_of_element_located(
+                (By.XPATH, "//main/section/div/div[1]/div[2]/div/ul/li[3]")
+            )
+        ).text
+
+        self.extra_description["footer"] = self.wait.until(
+            EC.presence_of_element_located(
+                (By.XPATH, "//main/section/div/div[1]/div[2]/div/p[2]")
+            )
+        ).text
+
+        self.extra_description_json = json.dumps(self.extra_description)
+
+        self.collected_data["extra_description"] = self.extra_description_json
 
     def scrape(self, navigation, card_class_name, card_title):
         try:
